@@ -15,4 +15,5 @@ public class User {
     private String emailId;
     private Long mobileNo;
 
+
 }
