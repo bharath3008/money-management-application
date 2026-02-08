@@ -15,6 +15,6 @@ public class Method {
     private String methodName;
 
     @OneToOne
-    @JoinColumn
-    private Long accountId;
+    @JoinColumn(name = "account_id")
+    private Account accountId;
 }
