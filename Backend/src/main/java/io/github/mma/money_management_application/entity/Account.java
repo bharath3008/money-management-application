@@ -11,10 +11,10 @@ import java.math.BigDecimal;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long accountId;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User userId;
-    private Long accountId;
     private String accountName;
     @Column(name = "balance", precision = 15, scale = 2, nullable = false)
     private BigDecimal balance;
