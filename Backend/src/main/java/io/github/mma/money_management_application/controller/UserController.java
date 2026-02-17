@@ -44,6 +44,13 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse(true,"User Email Id and Mobile Number Updated",null));
     }
 
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<ApiResponse<UserResponse>> deleteUser(@PathVariable Long userId) {
+        UserRequest request=new UserRequest();
+        request.setUserId(userId);
+        UserResponse response=userService.deleteUser(request);
+        return ResponseEntity.ok(new ApiResponse(true,"User Deleted",response));
+    }
 
 
 }

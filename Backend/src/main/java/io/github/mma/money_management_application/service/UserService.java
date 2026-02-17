@@ -10,4 +10,6 @@ public interface UserService {
     UserResponse getUser(UserRequest userRequest);
 
     UserResponse updateUserEmailIdAndMobile(UserRequest userRequest);
+
+    UserResponse deleteUser(UserRequest request);
 }
