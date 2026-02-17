@@ -17,4 +17,9 @@ public class UserResponse {
         this.emailId = emailId;
         this.mobileNo = mobileNo;
     }
+
+    public UserResponse(String emailId, Long mobileNo) {
+        this.emailId = emailId;
+        this.mobileNo = mobileNo;
+    }
 }

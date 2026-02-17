@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Override
     public UserResponse createUser(UserRequest request) {
         userRepository.findByEmailId(request.getEmailId())
                 .ifPresent(n->{throw new RuntimeException("Duplicate Email ID");});
@@ -27,5 +28,24 @@ public class UserServiceImpl implements UserService {
         User saved = userRepository.save(user);
         return new UserResponse(saved.getUserId(), saved.getUsername(), saved.getEmailId(), saved.getMobileNo());
     }
+    @Override
+    public UserResponse getUser(UserRequest request) {
+        User user = userRepository.findById(request.getUserId()).orElseThrow(()->new RuntimeException("User Not Found"));
+        return new UserResponse(user.getUserId(), user.getUsername(), user.getEmailId(), user.getMobileNo());
+    }
 
+    @Override
+    public UserResponse updateUserEmailIdAndMobile(UserRequest userRequest) {
+        User user = userRepository.findById(userRequest.getUserId()).orElseThrow(()->new RuntimeException("User Not Found"));
+        user.setEmailId(userRequest.getEmailId());
+        user.setMobileNo(userRequest.getMobileNo());
+        userRepository.save(user);
+        return new UserResponse(user.getEmailId(),user.getMobileNo());
+    }
+    @Override
+    public UserResponse deleteUser(UserRequest request) {
+        User user = userRepository.findById(request.getUserId()).orElseThrow(()->new RuntimeException("User Not Found"));
+        userRepository.delete(user);
+        return new UserResponse(user.getUserId(),user.getUsername(),user.getEmailId(),user.getMobileNo());
+    }
 }
