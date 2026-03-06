@@ -47,7 +47,6 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-              script: |
                 APP_DIR=/home/${{ secrets.EC2_USERNAME }}/app
               
                 mkdir -p $APP_DIR
