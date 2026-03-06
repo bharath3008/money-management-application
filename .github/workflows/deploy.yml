@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Pull code
+      # 1. Checkout repository
       - uses: actions/checkout@v4
 
       # 2. Setup Java
@@ -20,9 +20,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # 3. Build JAR (run inside backend folder)
+      # 3. Build JAR from Backend folder
       - name: Build with Maven
-        working-directory: money-management-backend
+        working-directory: Backend
         run: mvn clean package -DskipTests
 
       # 4. Copy JAR to EC2
@@ -32,7 +32,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "money-management-backend/target/*.jar"
+          source: "Backend/target/*.jar"
           target: "/home/${{ secrets.EC2_USERNAME }}/app"
 
       # 5. Restart application
@@ -43,5 +43,5 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo fuser -k 8080/tcp || true
+            pkill -f 'java -jar' || true
             nohup java -jar /home/${{ secrets.EC2_USERNAME }}/app/*.jar > /home/${{ secrets.EC2_USERNAME }}/app/log.txt 2>&1 &
