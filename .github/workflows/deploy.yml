@@ -38,6 +38,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "Backend/target/*.jar"
           target: "/home/${{ secrets.EC2_USERNAME }}/app"
+          strip_components: 2
 
       # 6. Restart Application
       - name: Restart Application
