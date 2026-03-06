@@ -30,7 +30,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "target/*.jar"
+          source: "target/*.jar, pom.xml"
           target: "/home/${{ secrets.EC2_USERNAME }}/app"
           strip_components: 1
 
