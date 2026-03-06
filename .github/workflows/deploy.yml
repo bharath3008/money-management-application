@@ -20,12 +20,16 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # 3. Build JAR from Backend folder
+      # 3. Build JAR
       - name: Build with Maven
         working-directory: Backend
         run: mvn clean package -DskipTests
 
-      # 4. Copy JAR to EC2
+      # 4. Verify build artifact
+      - name: Verify JAR
+        run: ls -l Backend/target
+
+      # 5. Copy JAR to EC2
       - name: Copy JAR to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -35,7 +39,7 @@ jobs:
           source: "Backend/target/*.jar"
           target: "/home/${{ secrets.EC2_USERNAME }}/app"
 
-      # 5. Restart application
+      # 6. Restart Application
       - name: Restart Application
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -43,5 +47,6 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            mkdir -p /home/${{ secrets.EC2_USERNAME }}/app
             pkill -f 'java -jar' || true
             nohup java -jar /home/${{ secrets.EC2_USERNAME }}/app/*.jar > /home/${{ secrets.EC2_USERNAME }}/app/log.txt 2>&1 &
