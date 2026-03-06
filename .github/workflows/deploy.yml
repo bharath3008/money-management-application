@@ -47,19 +47,26 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            APP_DIR=/home/${{ secrets.EC2_USERNAME }}/app
-
-            mkdir -p $APP_DIR
-
-            echo "Stopping old application..."
-            pkill -f 'java -jar' || true
-
-            echo "Checking JAR file..."
-            ls -l $APP_DIR
-
-            JAR_FILE=$(ls $APP_DIR/*.jar | head -n 1)
-
-            echo "Starting application with $JAR_FILE"
-
-            nohup java -jar $JAR_FILE > $APP_DIR/log.txt 2>&1 &
-            disown
+              APP_DIR=/home/${{ secrets.EC2_USERNAME }}/app
+            
+              mkdir -p $APP_DIR
+            
+              echo "Looking for running application..."
+              PID=$(pgrep -f ".jar")
+            
+              if [ -n "$PID" ]; then
+                echo "Stopping application with PID $PID"
+                kill $PID
+                sleep 5
+              else
+                echo "No running application found"
+              fi
+            
+              echo "Checking JAR file..."
+              ls -l $APP_DIR
+            
+              JAR_FILE=$(ls $APP_DIR/*.jar | head -n 1)
+            
+              echo "Starting application with $JAR_FILE"
+            
+              nohup java -jar $JAR_FILE > $APP_DIR/log.txt 2>&1 &
